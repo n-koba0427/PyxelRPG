@@ -29,4 +29,9 @@ class App:
     @avatar_editor_draw
     @map_draw
     def _draw(self):
-        WINDOW.MESSAGE = "PyxelRPGの世界へようこそ!"
+        if WINDOW.HIT == "":
+            WINDOW.MESSAGE = "PyxelRPGの世界へようこそ!"
+        elif WINDOW.HIT == "b":
+            WINDOW.MESSAGE = "ブロックに当たってるよ!"
+        elif WINDOW.HIT == "@":
+            WINDOW.MESSAGE = "この先は画面外みたい、、"

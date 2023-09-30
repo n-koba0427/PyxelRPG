@@ -29,6 +29,7 @@ class App:
              WINDOW.MAP_EDIT = not WINDOW.MAP_EDIT
         if pyxel.btnp(pyxel.KEY_R):
              WINDOW.reload_map(".base")
+        print(WINDOW.HIT)
       
     # visualize
     @avatar_editor_draw

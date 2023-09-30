@@ -10,24 +10,24 @@ import shutil
 
 # setting tile_code
 TILE_CODE:dict = {
-    "":(0,0),
     "b":(25,28),
     "l":(24,28),
     "n":(31,22),
 }
 TILE_COLLISION:dict = {
-    "":True,
+    "@":True,
     "b":True,
     "l":False,
     "n":True,
 }
-TILE_CODE_REVERSE = dict()
+TILE_CODE_REVERSE = {"":"@"}
 def _hex(x:int) -> str:
     return "{:02X}".format(x)
 for k, v in TILE_CODE.items():
     _code = _hex(v[0])+_hex(v[1])
     TILE_CODE[k] = _code
     TILE_CODE_REVERSE[_code] = k
+    # print(TILE_CODE_REVERSE)
 
 # initialize map
 def _load_map(filename:str=".mymap_0"):
@@ -54,14 +54,16 @@ class RPGWindow:
     SOURCE = get_data_path("data/img.pyxres")
     MESSAGE:str = ""
     MAP_ID:int = 0
+    HIT:str = ""
     
-    pyxel.init(WIDTH*8, (HEIGHT+BOTTOM)*8)
+    pyxel.init(WIDTH*8, (HEIGHT+BOTTOM)*8, title="PyxelRPG")
     # load data
     pyxel.load(SOURCE)
     
     def __init__(self) -> None:
         self.MAP = _load_map(f".mymap_{self.MAP_ID}")
         self._decode_map(self.MAP)
+        self.SENSOR = []
     
     def draw(self,slide=(0,0)) -> None:
         pyxel.tilemap(0).set(16,0,self.DECODED_MAP)
@@ -86,10 +88,13 @@ class RPGWindow:
         x2, y2 = (position[0]+12)//8, (position[1]+14)//8
         
         hit_count = 0
+        self.SENSOR = []
         for _y in range(y,y2+1):
             for _x in range(x*4,x2*4+1,4):
                 code = self.DECODED_MAP[_y][_x:_x+4]
-                hit_count += TILE_COLLISION[TILE_CODE_REVERSE[code]]
+                _tile = TILE_CODE_REVERSE[code]
+                self.SENSOR.append(_tile)
+                hit_count += TILE_COLLISION[_tile]
         return hit_count > 0
     
 WINDOW = RPGWindow()
@@ -143,7 +148,10 @@ def map_update(update:Callable):
                 WINDOW.MAP_ID = num_input
                 WINDOW.reload_map(f".mymap_{WINDOW.MAP_ID}")
             if WINDOW.collision(self.avatar.key_move()["position"]):
+                WINDOW.HIT = [char for char in WINDOW.SENSOR if char != 'l'][0]
                 self.avatar.position = self.avatar.preposition
+            else:
+                WINDOW.HIT = ""
         update(self,*args, **kwargs)
     return wrapper
 
