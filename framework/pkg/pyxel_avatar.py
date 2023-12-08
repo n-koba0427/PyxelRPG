@@ -119,6 +119,7 @@ class Avatar(Character):
                 h=8,
                 colkey=11
             )
+        # pyxel.circ(self.position_x+8, self.position_y+8, 5, self.direction+1)
 
 @dataclass
 class Editor:

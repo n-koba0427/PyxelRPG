@@ -11,14 +11,20 @@ import shutil
 # setting tile_code
 TILE_CODE:dict = {
     "b":(25,28),
+    # "b":(23,28),
     "l":(24,28),
+    # "l":(23,29),
     "n":(31,22),
+    "t":(24,29),
+    "f":(25,29),
 }
 TILE_COLLISION:dict = {
     "@":True,
     "b":True,
     "l":False,
     "n":True,
+    "t":True,
+    "f":True,
 }
 TILE_CODE_REVERSE = {"":"@"}
 def _hex(x:int) -> str:
@@ -93,9 +99,14 @@ class RPGWindow:
             for _x in range(x*4,x2*4+1,4):
                 code = self.DECODED_MAP[_y][_x:_x+4]
                 _tile = TILE_CODE_REVERSE[code]
-                self.SENSOR.append(_tile)
+                _tile_info = {"tile":_tile, "position":(_x//4,_y)}
+                self.SENSOR.append(_tile_info)
                 hit_count += TILE_COLLISION[_tile]
         return hit_count > 0
+    
+    # def change_tile(self, position, tile):
+    #     _x, _y = position
+    #     self.MAP
     
 WINDOW = RPGWindow()
 WRITER = puf.Writer("misaki_gothic.ttf")
@@ -148,7 +159,7 @@ def map_update(update:Callable):
                 WINDOW.MAP_ID = num_input
                 WINDOW.reload_map(f".mymap_{WINDOW.MAP_ID}")
             if WINDOW.collision(self.avatar.key_move()["position"]):
-                WINDOW.HIT = [char for char in WINDOW.SENSOR if char != 'l'][0]
+                WINDOW.HIT = [info for info in WINDOW.SENSOR if info["tile"] != 'l'][0]
                 self.avatar.position = self.avatar.preposition
             else:
                 WINDOW.HIT = ""
@@ -158,7 +169,9 @@ def map_update(update:Callable):
 def _next_tile(tile):
     tile_order = {
         "b": "l",
-        "l": "b",
+        "l": "t",
+        "t": "f",
+        "f": "b",
     }
     return tile_order[tile]
 

@@ -27,7 +27,7 @@ class App:
     def _update(self):
         if pyxel.btnp(pyxel.KEY_M):
              WINDOW.MAP_EDIT = not WINDOW.MAP_EDIT
-        if pyxel.btnp(pyxel.KEY_R):
+        if WINDOW.MAP_EDIT and pyxel.btnp(pyxel.KEY_R):
              WINDOW.reload_map(".base")
         print(WINDOW.HIT)
       
@@ -35,6 +35,6 @@ class App:
     @avatar_editor_draw
     @map_draw
     def _draw(self):
-        WINDOW.MESSAGE = "E: キャラ編集 / M: マップ編集"
+        WINDOW.MESSAGE = "0~9:マップ変更 / M:マップ編集"
         if avatar_editor.flag:
-            WINDOW.MESSAGE = "E: 編集終了"
+            WINDOW.MESSAGE = "E: キャラ編集を終了する"
