@@ -104,9 +104,10 @@ class RPGWindow:
                 hit_count += TILE_COLLISION[_tile]
         return hit_count > 0
     
-    # def change_tile(self, position, tile):
-    #     _x, _y = position
-    #     self.MAP
+    def change_tile(self, position, to_tile):
+        _x, _y = position
+        self.MAP[_y] = self.MAP[_y][:_x] + to_tile +self.MAP[_y][_x+1:]
+        self._decode_map(self.MAP)
     
 WINDOW = RPGWindow()
 WRITER = puf.Writer("misaki_gothic.ttf")
@@ -162,7 +163,7 @@ def map_update(update:Callable):
                 WINDOW.HIT = [info for info in WINDOW.SENSOR if info["tile"] != 'l'][0]
                 self.avatar.position = self.avatar.preposition
             else:
-                WINDOW.HIT = ""
+                WINDOW.HIT = {"tile":"","position":None}
         update(self,*args, **kwargs)
     return wrapper
 

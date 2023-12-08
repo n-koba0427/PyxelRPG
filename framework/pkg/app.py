@@ -23,12 +23,19 @@ class App:
     @avatar_editor_update
     @map_update
     def _update(self):
-        if WINDOW.HIT == "":
+        hit_info = WINDOW.HIT
+        print(hit_info)
+        tile, tile_pos = hit_info["tile"], hit_info["position"]
+        
+        if tile == "":
             WINDOW.MESSAGE = "PyxelRPGの世界へようこそ!"
             # WINDOW.MESSAGE = ""
-        elif WINDOW.HIT == "b":
-            WINDOW.MESSAGE = "ブロックに当たってるよ!"
-        elif WINDOW.HIT == "@":
+        elif tile == "b":
+            WINDOW.MESSAGE = f"ブロック({tile_pos[0]},{tile_pos[1]})に当たってるよ!"
+        elif tile == "t":
+            WINDOW.MESSAGE = f"宝箱({tile_pos[0]},{tile_pos[1]})をゲット！"
+            WINDOW.change_tile(tile_pos, "l")
+        elif tile == "@":
             WINDOW.MESSAGE = "この先は画面外みたい、、"
       
     # visualize
